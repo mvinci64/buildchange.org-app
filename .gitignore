@@ -1,0 +1,40 @@
+# dependencies
+node_modules/
+
+# expo
+.expo/
+.expo-shared/
+dist/
+web-build/
+
+# build output
+backend/dist/
+*.tsbuildinfo
+
+# env & secrets
+.env
+.env.*
+!.env.example
+*.keystore
+*.p12
+*.mobileprovision
+*.pem
+
+# aws sam
+.aws-sam/
+samconfig.toml
+
+# IntelliJ
+.idea/dataSources.local.xml
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/shelf/
+
+# os
+.DS_Store
+Thumbs.db
+
+# logs
+*.log
+npm-debug.log*
+coverage/

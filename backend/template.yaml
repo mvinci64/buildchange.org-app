@@ -1,0 +1,80 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Nepal Aid API — serverless backend (API Gateway + Lambda + RDS PostGIS)
+
+Globals:
+  Function:
+    Runtime: nodejs22.x
+    Architectures: [arm64]
+    MemorySize: 512
+    Timeout: 10
+    Environment:
+      Variables:
+        DB_SECRET_ARN: !Ref DbSecretArn
+
+Parameters:
+  DbSecretArn:
+    Type: String
+    Description: ARN of the Secrets Manager secret holding DB credentials
+  LambdaSecurityGroupId:
+    Type: String
+    Description: Security group allowing 5432 to RDS
+  PrivateSubnetA:
+    Type: String
+  PrivateSubnetB:
+    Type: String
+
+Resources:
+  Api:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: dev
+      CorsConfiguration:
+        AllowOrigins: ['*']
+        AllowMethods: [GET, POST, OPTIONS]
+        AllowHeaders: [Content-Type]
+
+  GetLocationsFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: dist/getLocations.handler
+      CodeUri: .
+      Policies:
+        - AWSSecretsManagerGetSecretValuePolicy: { SecretArn: !Ref DbSecretArn }
+      VpcConfig:
+        SecurityGroupIds: [!Ref LambdaSecurityGroupId]
+        SubnetIds: [!Ref PrivateSubnetA, !Ref PrivateSubnetB]
+      Events:
+        Get:
+          Type: HttpApi
+          Properties: { ApiId: !Ref Api, Path: /locations, Method: GET }
+
+  GetBuildingFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: dist/getBuilding.handler
+      CodeUri: .
+      Policies:
+        - AWSSecretsManagerGetSecretValuePolicy: { SecretArn: !Ref DbSecretArn }
+      VpcConfig:
+        SecurityGroupIds: [!Ref LambdaSecurityGroupId]
+        SubnetIds: [!Ref PrivateSubnetA, !Ref PrivateSubnetB]
+      Events:
+        Get:
+          Type: HttpApi
+          Properties: { ApiId: !Ref Api, Path: /building/{id}, Method: GET }
+
+  GetDamageGroupsFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: dist/getDamageGroups.handler
+      CodeUri: .
+      Events:
+        Get:
+          Type: HttpApi
+          Properties: { ApiId: !Ref Api, Path: /damagegroups, Method: GET }
+
+Outputs:
+  ApiBaseUrl:
+    Description: Base URL for EXPO_PUBLIC_API_BASE_URL
+    Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.amazonaws.com/dev'

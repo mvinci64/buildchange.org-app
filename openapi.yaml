@@ -1,0 +1,92 @@
+openapi: 3.0.3
+info:
+  title: Nepal Aid API
+  version: 1.0.0
+  description: Read API for earthquake damage assessment in the Jajarkot AOI.
+servers:
+  - url: https://{apiId}.execute-api.{region}.amazonaws.com/{stage}
+    variables:
+      apiId: { default: REPLACE_ME }
+      region: { default: eu-west-1 }
+      stage: { default: dev }
+paths:
+  /locations:
+    get:
+      summary: List locations (wards) for a damage group
+      parameters:
+        - in: query
+          name: damageGroup
+          required: true
+          schema: { type: integer, minimum: 1, maximum: 4 }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Location' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '500': { $ref: '#/components/responses/ServerError' }
+  /building/{id}:
+    get:
+      summary: Get a single location by id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Location' }
+        '404': { description: Not found }
+  /districts:
+    get:
+      summary: List distinct districts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { type: string } }
+  /damagegroups:
+    get:
+      summary: List damage groups and their labels
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    value: { type: integer }
+                    label: { type: string }
+components:
+  schemas:
+    Location:
+      type: object
+      required: [id, district, ward, lat, lon, damageGroup]
+      properties:
+        id: { type: integer, example: 1 }
+        district: { type: string, example: Bheri }
+        ward: { type: string, example: '01' }
+        lat: { type: number, format: double, example: 28.69 }
+        lon: { type: number, format: double, example: 82.21 }
+        damageGroup: { type: integer, minimum: 1, maximum: 4, example: 3 }
+  responses:
+    BadRequest:
+      description: Invalid parameters
+      content:
+        application/json:
+          schema: { type: object, properties: { message: { type: string } } }
+    ServerError:
+      description: Server error
+      content:
+        application/json:
+          schema: { type: object, properties: { message: { type: string } } }

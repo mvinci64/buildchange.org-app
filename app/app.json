@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Nepal Aid",
+    "slug": "nepal-aid-mobile",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "nepalaid",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#FFFFFF"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "org.buildchange.nepalaid",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Nepal Aid uses your location to show your position on the damage map."
+      },
+      "config": {
+        "googleMapsApiKey": "REPLACE_WITH_IOS_GOOGLE_MAPS_KEY_IF_USED"
+      }
+    },
+    "android": {
+      "package": "org.buildchange.nepalaid",
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
+      "config": {
+        "googleMaps": {
+          "apiKey": "REPLACE_WITH_ANDROID_GOOGLE_MAPS_KEY"
+        }
+      }
+    },
+    "plugins": ["expo-location"],
+    "extra": {
+      "aoiBbox": {
+        "minLon": 81.9261,
+        "minLat": 28.4636,
+        "maxLon": 82.5596,
+        "maxLat": 28.8131
+      }
+    }
+  }
+}
