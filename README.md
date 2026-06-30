@@ -33,7 +33,7 @@ cp .env.example .env   # set EXPO_PUBLIC_API_BASE_URL (or leave blank to use MSW
 npx expo start         # press i / a, or scan QR with Expo Go
 ```
 
-The app runs end-to-end against **mock data (MSW)** with no backend — open it, pick a damage group, browse the list, drill into a building, open the map.
+The app runs end-to-end against **mock data** with no backend — open it, pick a damage group, browse the list, drill into a building, open the map.
 
 ## Quick start — backend
 
