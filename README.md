@@ -1,2 +1,2 @@
 # buildchange.org-app
-App Mobile da donare a buildchange.org
+React Native (Expo) → Axios → API Gateway → AWS Lambda → RDS PostgreSQL/PostGIS
