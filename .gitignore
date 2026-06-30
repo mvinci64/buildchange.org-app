@@ -24,11 +24,8 @@ backend/dist/
 .aws-sam/
 samconfig.toml
 
-# IntelliJ
-.idea/dataSources.local.xml
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/shelf/
+# IntelliJ — ignore the whole .idea/ for now (re-add run configs later if desired)
+.idea/
 
 # os
 .DS_Store
